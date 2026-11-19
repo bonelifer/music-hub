@@ -80,6 +80,21 @@ you open it by to `allowed_hosts`.
 Without Docker, run `python3 music_hub.py serve`. `python3 music_hub.py
 check-config` reports any setting with a bad value.
 
+### myMPD Home tile
+
+`install-mympd-tile.py` adds a tile to myMPD's Home screen that opens
+music-hub in a new tab:
+
+```bash
+./install-mympd-tile.py --mympd http://127.0.0.1:8081 --url http://192.168.1.80:18773/
+```
+
+`--url` is the address the browser showing myMPD uses to reach music-hub,
+so use the LAN address if you open myMPD on a phone. The tile uses myMPD's
+built-in `hub` icon in white on myMPD's green, so no image is copied into
+myMPD. Running it again updates the same tile instead of adding a second
+one. Set `MYMPD_SESSION` when myMPD is protected by a PIN.
+
 ## Standalone setup (no MPD/myMPD)
 
 `compose.standalone.yaml` starts music-hub with its own copies of the
