@@ -1,0 +1,61 @@
+# music-hub settings. Copy this file to music-hub.cfg and edit the copy.
+# These are music-hub's own preferences; the myMPD screens keep theirs
+# separately. Logins live in the bridges, not here.
+
+[server]
+# Address to listen on. 127.0.0.1 is this computer only; use the
+# computer's LAN address to reach music-hub from a phone or another PC.
+listen = 127.0.0.1
+
+port = 18773
+
+# Extra host names the page may be opened under, separated by commas, such
+# as a LAN name (music.lan) or address. 127.0.0.1, localhost and the
+# listen address are always allowed.
+allowed_hosts =
+
+[playback]
+# Show "Play on MPD" buttons. Turn off when MPD/myMPD is not in use.
+mpd_enabled = true
+
+# Show "Play in browser" buttons, which play on the device viewing the page.
+browser_enabled = true
+
+[mpd]
+host = 127.0.0.1
+
+port = 6600
+
+# Leave empty when MPD has no password.
+password =
+
+# Each service: enabled shows it on the page; bridge_url is the bridge that
+# holds its login. The defaults are the bridges myMPD already uses, so both
+# share one login. Without MPD/myMPD, point these at the bridges
+# compose.standalone.yaml starts instead.
+[ibroadcast]
+enabled = true
+
+bridge_url = http://127.0.0.1:18769
+
+# Default song count for a random playlist (1 to 100).
+random_playlist_size = 25
+
+# Where a random playlist is saved by default: mpd, ibroadcast, or both.
+# When mpd_enabled is false, playlists always go to iBroadcast.
+playlist_destination = mpd
+
+[tunein]
+enabled = true
+
+bridge_url = http://127.0.0.1:18766
+
+[iheart]
+enabled = true
+
+bridge_url = http://127.0.0.1:18767
+
+[somafm]
+enabled = true
+
+bridge_url = http://127.0.0.1:18768

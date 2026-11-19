@@ -1,0 +1,28 @@
+name: Docker CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Build image
+        run: docker build --tag music-hub:ci .
+      - name: Check container entry point
+        run: docker run --rm music-hub:ci --help
+      - name: Check the example config inside the image
+        run: |
+          docker run --rm -v "$PWD/music-hub.cfg.example:/config/music-hub.cfg:ro" \
+            music-hub:ci check-config
+      - name: Check the compose files
+        run: |
+          touch music-hub.cfg
+          docker compose -f compose.yaml config --quiet
+          IBROADCAST_CLIENT_ID=ci docker compose -f compose.standalone.yaml config --quiet

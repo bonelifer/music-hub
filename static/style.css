@@ -1,0 +1,145 @@
+/* Colors follow myMPD's look, the same palette as music-librarian: gray
+   panels and the green highlight (#28a745). Links use a lighter or darker
+   green so text stays readable, and solid buttons use #198754 so white
+   text on them is readable too. */
+:root { color-scheme: light;
+  --bg: #f8f9fa; --surface: #e9ecef; --stripe: #f1f3f5; --fg: #212529;
+  --muted: #495057; --line: #ced4da; --accent: #198754; --link: #157347;
+  --button: #198754; --on-button: #fff; --header: #dee2e6;
+  --picked: #d1e7dd; --warn: #a52834; --ok: #0f5132; --ok-bg: #d1e7dd;
+  --warn-bg: #f8d7da; --info-bg: #e9ecef; --radius: 8px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) { color-scheme: dark;
+    --bg: #212529; --surface: #343a40; --stripe: #2b3035; --fg: #f8f9fa;
+    --muted: #adb5bd; --line: #495057; --accent: #28a745; --link: #45c867;
+    --button: #198754; --on-button: #fff; --header: #343a40;
+    --picked: #1e3a2a; --warn: #ea868f; --ok: #75b798; --ok-bg: #051b11;
+    --warn-bg: #2c0b0e; --info-bg: #2b3035; } }
+:root[data-theme=dark] { color-scheme: dark;
+  --bg: #212529; --surface: #343a40; --stripe: #2b3035; --fg: #f8f9fa;
+  --muted: #adb5bd; --line: #495057; --accent: #28a745; --link: #45c867;
+  --button: #198754; --on-button: #fff; --header: #343a40;
+  --picked: #1e3a2a; --warn: #ea868f; --ok: #75b798; --ok-bg: #051b11;
+  --warn-bg: #2c0b0e; --info-bg: #2b3035; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); margin: 0;
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--link); text-underline-offset: .15em; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+main:focus { outline: none; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 1rem; top: .5rem; z-index: 10; background: var(--bg);
+  padding: .5rem .75rem; border-radius: var(--radius); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }
+
+header { border-bottom: 1px solid var(--line); background: var(--header); }
+header nav, main, footer { max-width: 64rem; margin: 0 auto; padding: 0 1rem; }
+nav ul { list-style: none; margin: 0; padding: 0; display: flex;
+  flex-wrap: wrap; gap: .25rem; align-items: center; }
+nav .brand { font-weight: 700; margin-right: auto; padding: .7rem 0; }
+nav a { display: inline-block; padding: .7rem .75rem; text-decoration: none;
+  border-bottom: 3px solid transparent; color: var(--fg); }
+nav a:hover { border-bottom-color: var(--line); }
+nav a[aria-current=page] { border-bottom-color: var(--accent); font-weight: 600; }
+
+/* Theme button: a half white, half black circle. The tooltip shows on
+   hover and on keyboard focus. */
+.theme { position: relative; margin: 0; padding: .3rem 0 .3rem .25rem; }
+.theme button { width: 2.5rem; height: 2.5rem; min-height: 0; padding: 0;
+  justify-content: center; border-radius: 50%; background: transparent;
+  border-color: transparent; }
+.theme button:hover { border-color: var(--line); }
+.theme-icon { width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  border: 2px solid var(--fg);
+  background: linear-gradient(90deg, #fff 50%, #000 50%); }
+.theme .tip { position: absolute; right: 0; top: calc(100% + .1rem);
+  z-index: 5; width: max-content; max-width: 16rem; padding: .3rem .6rem;
+  border-radius: var(--radius); background: var(--fg); color: var(--bg);
+  font-size: .85rem; line-height: 1.3; visibility: hidden; }
+.theme:hover .tip, .theme button:focus-visible + .tip { visibility: visible; }
+
+main { padding-bottom: 2rem; }
+h1 { font-size: 1.6rem; line-height: 1.25; margin: 1.5rem 0 .75rem; }
+h2 { font-size: 1.15rem; margin: 1.5rem 0 .5rem; }
+.muted { color: var(--muted); }
+.notice { background: var(--info-bg); padding: .75rem 1rem;
+  border-radius: var(--radius); border-left: 4px solid var(--accent); }
+.notice.error { border-left-color: var(--warn); background: var(--warn-bg); }
+
+.panel { display: grid; gap: .25rem; justify-items: start; max-width: 32rem;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: .75rem 1rem; }
+.panel .toolbar { margin: .25rem 0; }
+
+.btn, button { font: inherit; display: inline-flex; align-items: center;
+  gap: .4rem; min-height: 2.5rem; padding: .45rem 1rem; cursor: pointer;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); color: var(--fg); text-decoration: none; }
+.btn:hover, button:hover { border-color: var(--accent); }
+button:disabled, button[aria-disabled=true] { opacity: .6; cursor: default; }
+.primary { background: var(--button); border-color: var(--button);
+  color: var(--on-button); font-weight: 600; }
+.primary:hover { filter: brightness(1.08); }
+.small { min-height: 2.25rem; padding: .25rem .7rem; font-size: .9rem; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 1rem;
+  padding: 0; list-style: none; }
+.tabs button[aria-pressed=true] { background: var(--picked);
+  border-color: var(--accent); font-weight: 600; }
+.toolbar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  margin: .75rem 0; }
+.toolbar form { margin: 0; display: flex; flex-wrap: wrap; gap: .5rem;
+  align-items: center; }
+input, select { font: inherit; min-height: 2.5rem; padding: .35rem .6rem;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg); color: var(--fg); }
+label { font-weight: 600; }
+.crumbs { display: flex; flex-wrap: wrap; gap: .25rem; align-items: center;
+  margin: .25rem 0 .75rem; padding: 0; list-style: none; }
+.crumbs li + li::before { content: "›"; margin-right: .25rem; color: var(--muted); }
+.crumbs button { min-height: 2rem; padding: .1rem .5rem; }
+
+.rows { list-style: none; margin: 0; padding: 0;
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.rows li { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  padding: .45rem .75rem; border-top: 1px solid var(--line); }
+.rows li:first-child { border-top: 0; }
+.rows li:nth-child(even) { background: var(--stripe); }
+.rows .name { flex: 1 1 14rem; min-width: 0; overflow-wrap: anywhere; }
+.rows .name button { border: 0; background: transparent; padding: 0;
+  min-height: 2rem; color: var(--link); text-align: left;
+  text-decoration: underline; text-underline-offset: .15em; }
+.actions { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+.cards { list-style: none; padding: 0; margin: 1rem 0; display: grid;
+  gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+.card { display: flex; flex-direction: column; gap: .5rem; height: 100%;
+  padding: .75rem; border: 1px solid var(--line);
+  border-radius: var(--radius); background: var(--surface); }
+.card img { width: 100%; aspect-ratio: 1; object-fit: contain;
+  border-radius: calc(var(--radius) - 2px); background: var(--bg); }
+.card .name { font-weight: 600; overflow-wrap: anywhere; }
+.card .actions { margin-top: auto; }
+.recent { margin: 0; padding-left: 1.1rem; font-size: .9rem; }
+
+/* Players: one compact bar each, kept at the bottom of the window. */
+footer { position: sticky; bottom: 0; display: grid; gap: .35rem;
+  padding-top: .35rem; padding-bottom: .35rem; background: var(--bg);
+  border-top: 1px solid var(--line); }
+.player { display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: center;
+  padding: .3rem .6rem; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.player-title { font-size: .85rem; margin: 0; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .03em; }
+.now { flex: 1 1 10rem; min-width: 0; margin: 0; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.controls { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
+.controls button { min-height: 2.25rem; padding: .2rem .65rem; font-size: .9rem; }
+audio { height: 2.25rem; flex: 1 1 14rem; min-width: 12rem; }
+
+@media (max-width: 40rem) {
+  .rows li { padding: .5rem; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); }
+}

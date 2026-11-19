@@ -1,0 +1,88 @@
+# music-hub without MPD/myMPD. Music plays in the browser only, and
+# music-hub runs its own copies of the bridges, which hold their own logins
+# in ./standalone. The copies listen on 1877x ports, so they never clash with
+# bridges a myMPD setup may run on the same computer.
+#
+# In music-hub.cfg set:
+#   [playback]   mpd_enabled = false
+#   [ibroadcast] bridge_url = http://127.0.0.1:18779
+#   [tunein]     bridge_url = http://127.0.0.1:18776
+#   [iheart]     bridge_url = http://127.0.0.1:18777
+#   [somafm]     bridge_url = http://127.0.0.1:18778
+# and set enabled = false for any service you have no login for.
+#
+# Logins (see the README for the full steps):
+#   iBroadcast: put IBROADCAST_CLIENT_ID in .env, then run once:
+#     docker compose -f compose.standalone.yaml run --rm ibroadcast \
+#       authorize --token-file /state/token.json --write-playlists
+#   TuneIn:     standalone/tunein.cfg  (username and password)
+#   iHeart:     standalone/test-account.json  (made by mympd-iheart's
+#               test-account.py)
+#   SomaFM:     no login
+services:
+  music-hub:
+    image: ghcr.io/bonelifer/music-hub:latest
+    network_mode: host
+    user: "${MUSIC_HUB_UID:-1000}:${MUSIC_HUB_GID:-1000}"
+    volumes:
+      - type: bind
+        source: ./music-hub.cfg
+        target: /config/music-hub.cfg
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./state
+        target: /state
+        bind:
+          create_host_path: false
+    restart: unless-stopped
+
+  ibroadcast:
+    image: ghcr.io/bonelifer/mympd-ibroadcast:latest
+    network_mode: host
+    user: "${MUSIC_HUB_UID:-1000}:${MUSIC_HUB_GID:-1000}"
+    environment:
+      IBROADCAST_CLIENT_ID: ${IBROADCAST_CLIENT_ID:?Set your registered app ID in .env}
+    volumes:
+      - type: bind
+        source: ./standalone/ibroadcast
+        target: /state
+        bind:
+          create_host_path: false
+    command: ["serve", "--token-file", "/state/token.json", "--port", "18779"]
+    restart: unless-stopped
+
+  tunein:
+    image: ghcr.io/bonelifer/mympd-tunein:latest
+    network_mode: host
+    user: "${MUSIC_HUB_UID:-1000}:${MUSIC_HUB_GID:-1000}"
+    volumes:
+      - type: bind
+        source: ./standalone/tunein.cfg
+        target: /config/tunein.cfg
+        read_only: true
+        bind:
+          create_host_path: false
+    command: ["--listen", "127.0.0.1", "--port", "18776"]
+    restart: unless-stopped
+
+  iheart:
+    image: ghcr.io/bonelifer/mympd-iheart:latest
+    network_mode: host
+    user: "${MUSIC_HUB_UID:-1000}:${MUSIC_HUB_GID:-1000}"
+    volumes:
+      - type: bind
+        source: ./standalone/test-account.json
+        target: /config/test-account.json
+        read_only: true
+        bind:
+          create_host_path: false
+    command: ["--listen", "127.0.0.1", "--port", "18777"]
+    restart: unless-stopped
+
+  somafm:
+    image: ghcr.io/bonelifer/mympd-somafm:latest
+    network_mode: host
+    command: ["--listen", "127.0.0.1", "--port", "18778"]
+    restart: unless-stopped
