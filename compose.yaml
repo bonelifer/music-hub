@@ -1,0 +1,23 @@
+# music-hub beside myMPD: it calls the bridges myMPD already runs, so both
+# share one login per service. Copy music-hub.cfg.example to music-hub.cfg
+# first, and create ./state yourself (mkdir state) so it belongs to your
+# user; Docker would otherwise create it owned by root.
+services:
+  music-hub:
+    image: ghcr.io/bonelifer/music-hub:latest
+    # Host networking reaches the bridges and MPD on 127.0.0.1.
+    network_mode: host
+    user: "${MUSIC_HUB_UID:-1000}:${MUSIC_HUB_GID:-1000}"
+    volumes:
+      - type: bind
+        source: ./music-hub.cfg
+        target: /config/music-hub.cfg
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./state
+        target: /state
+        bind:
+          create_host_path: false
+    restart: unless-stopped

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>music-hub</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header>
+  <nav aria-label="Main">
+    <ul id="nav">
+      <li class="brand">music-hub</li>
+      <li class="theme">
+        <button type="button" id="theme-button">
+          <span class="theme-icon" aria-hidden="true"></span>
+          <span class="sr-only" id="theme-label">Theme</span>
+        </button>
+        <span class="tip" id="theme-tip" aria-hidden="true"></span>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1 id="heading">music-hub</h1>
+  <p id="status" class="notice" role="status" aria-live="polite" hidden></p>
+  <div id="view"><p class="muted">Loading…</p></div>
+</main>
+<footer id="players" aria-label="Players">
+  <section id="mpd-player" class="player" aria-labelledby="mpd-player-title" hidden>
+    <h2 id="mpd-player-title" class="player-title">MPD</h2>
+    <p class="now" id="mpd-now">Not playing</p>
+    <div class="controls">
+      <button type="button" data-mpd="previous">Previous</button>
+      <button type="button" data-mpd="pause" id="mpd-toggle">Pause</button>
+      <button type="button" data-mpd="next">Next</button>
+      <button type="button" data-mpd="stop">Stop</button>
+    </div>
+  </section>
+  <section id="browser-player" class="player" aria-labelledby="browser-player-title" hidden>
+    <h2 id="browser-player-title" class="player-title">This browser</h2>
+    <p class="now" id="browser-now">Not playing</p>
+    <audio id="audio" controls preload="none"></audio>
+    <div class="controls">
+      <button type="button" id="browser-next">Next</button>
+      <button type="button" id="browser-clear">Clear</button>
+      <span class="muted" id="browser-left"></span>
+    </div>
+  </section>
+</footer>
+</body>
+</html>
