@@ -1,0 +1,27 @@
+name: Bug report
+description: Report a problem with music-hub
+labels: ["bug"]
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include steps to reproduce and what you expected.
+    validations:
+      required: true
+  - type: input
+    id: service
+    attributes:
+      label: Service
+      description: Which service the problem is with (iBroadcast, TuneIn, iHeartRadio, SomaFM, MPD).
+  - type: textarea
+    id: output
+    attributes:
+      label: Messages or log output
+      description: The message shown on the page, or `docker compose logs`. Remove any passwords first.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Image tag or commit
+      placeholder: ghcr.io/bonelifer/music-hub:latest
